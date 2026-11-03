@@ -373,7 +373,7 @@ export class ShellWindow {
 
         if (actor) {
             if (this.is_maximized()) {
-                meta.unmaximize(Meta.MaximizeFlags.BOTH);
+                utils.unmaximize(meta, Meta.MaximizeFlags.BOTH);
             }
             actor.remove_all_transitions();
 

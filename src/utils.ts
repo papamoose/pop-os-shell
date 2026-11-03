@@ -17,6 +17,26 @@ export function is_wayland(): boolean {
     return true;
 }
 
+/** Unmaximize a window; GNOME 49+ dropped the flags argument in favor of set_unmaximize_flags */
+export function unmaximize(win: Meta.Window, flags: Meta.MaximizeFlags = Meta.MaximizeFlags.BOTH) {
+    if (typeof win.set_unmaximize_flags === 'function') {
+        win.set_unmaximize_flags(flags);
+        win.unmaximize();
+    } else {
+        win.unmaximize(flags);
+    }
+}
+
+/** Maximize a window; GNOME 49+ dropped the flags argument in favor of set_maximize_flags */
+export function maximize(win: Meta.Window, flags: Meta.MaximizeFlags = Meta.MaximizeFlags.BOTH) {
+    if (typeof win.set_maximize_flags === 'function') {
+        win.set_maximize_flags(flags);
+        win.maximize();
+    } else {
+        win.maximize(flags);
+    }
+}
+
 export function block_signal(object: GObject.Object, signal: SignalID) {
     GObject.signal_handler_block(object, signal);
 }

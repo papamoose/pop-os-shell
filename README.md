@@ -97,17 +97,17 @@ Features that are shared between stacking and auto-tiling modes.
 
 These are key to many of the shortcuts utilized by tiling window managers. This document will henceforth refer to these keys as `<Direction>`, which default to the following keys:
 
-- `Left` or `h`
-- `Down` or `j`
-- `Up` or `k`
-- `Right` or `l`
+- `Left`
+- `Down`
+- `Up`
+- `Right`
 
 ### Overridden GNOME Shortcuts
 
 - `Super` + `q`: Close window
 - `Super` + `m`: Maximize the focused window
 - `Super` + `,`: Minimize the focused window
-- `Super` + `Esc`: Lock screen
+- `Super` + `l`: Lock screen (GNOME default, not overridden)
 - `Super` + `f`: Files
 - `Super` + `e`: Email
 - `Super` + `b`: Web Browser

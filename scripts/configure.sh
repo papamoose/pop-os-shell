@@ -24,11 +24,6 @@ set_keybindings() {
         return 0
     fi
 
-    left="h"
-    down="j"
-    up="k"
-    right="l"
-
     KEYS_GNOME_WM=/org/gnome/desktop/wm/keybindings
     KEYS_GNOME_SHELL=/org/gnome/shell/keybindings
     KEYS_MUTTER=/org/gnome/mutter/keybindings
@@ -38,7 +33,7 @@ set_keybindings() {
     # Disable incompatible shortcuts
     # Restore the keyboard shortcuts: disable <Super>Escape
     dconf write ${KEYS_MUTTER_WAYLAND_RESTORE} "@as []"
-    # Hide window: disable <Super>h
+    # Hide window
     dconf write ${KEYS_GNOME_WM}/minimize "@as ['<Super>comma']"
     # Open the application menu: disable <Super>m
     dconf write ${KEYS_GNOME_SHELL}/open-application-menu "@as []"
@@ -71,9 +66,9 @@ set_keybindings() {
 
     # Super + Ctrl + direction keys, change workspaces, move focus between monitors
     # Move to workspace below
-    dconf write ${KEYS_GNOME_WM}/switch-to-workspace-down "['<Primary><Super>Down','<Primary><Super>${down}']"
+    dconf write ${KEYS_GNOME_WM}/switch-to-workspace-down "['<Primary><Super>Down']"
     # Move to workspace above
-    dconf write ${KEYS_GNOME_WM}/switch-to-workspace-up "['<Primary><Super>Up','<Primary><Super>${up}']"
+    dconf write ${KEYS_GNOME_WM}/switch-to-workspace-up "['<Primary><Super>Up']"
 
     # Disable tiling to left / right of screen
     dconf write ${KEYS_MUTTER}/toggle-tiled-left "@as []"
@@ -81,8 +76,8 @@ set_keybindings() {
 
     # Toggle maximization state
     dconf write ${KEYS_GNOME_WM}/toggle-maximized "['<Super>m']"
-    # Lock screen
-    dconf write ${KEYS_MEDIA}/screensaver "['<Super>Escape']"
+    # Lock screen: keep GNOME's <Super>l
+    dconf write ${KEYS_MEDIA}/screensaver "['<Super>l']"
     # Home folder
     dconf write ${KEYS_MEDIA}/home "['<Super>f']"
     # Launch email client

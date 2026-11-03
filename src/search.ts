@@ -95,11 +95,11 @@ export class Search {
             const ctrlKey = Boolean(event.get_state() & Clutter.ModifierType.CONTROL_MASK);
 
             const is_down = (): boolean => {
-                return key === 'Down' || (ctrlKey && key === 'J') || (ctrlKey && key === 'N');
+                return key === 'Down' || (ctrlKey && key === 'N');
             };
 
             const is_up = (): boolean => {
-                return key === 'Up' || key === 'ISO_Left_Tab' || (ctrlKey && key === 'K') || (ctrlKey && key === 'P');
+                return key === 'Up' || key === 'ISO_Left_Tab' || (ctrlKey && key === 'P');
             };
 
             // Up arrow or left tab was pressed
