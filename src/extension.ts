@@ -336,7 +336,7 @@ export class Ext extends Ecs.System<ExtEvent> {
                     window.meta.move_resize_frame(true, x, y, width, height);
                     window.meta.move_frame(true, x, y);
 
-                    this.monitors.insert(window.entity, [win.meta.get_monitor(), win.workspace_id()]);
+                    this.monitors.insert(window.entity, this.workspace_id(win));
 
                     if (win.activate_after_move) {
                         win.activate_after_move = false;
@@ -1138,7 +1138,7 @@ export class Ext extends Ecs.System<ExtEvent> {
                 const prev_mon = this.monitors.get(win.entity);
                 const mon_drop = prev_mon ? prev_mon[0] !== cmon : false;
 
-                this.monitors.insert(win.entity, [win.meta.get_monitor(), win.workspace_id()]);
+                this.monitors.insert(win.entity, this.workspace_id(win));
 
                 if (rect.x != crect.x || rect.y != crect.y) {
                     if (rect.contains(cursor_rect())) {
@@ -1651,8 +1651,7 @@ export class Ext extends Ecs.System<ExtEvent> {
         win: Window.ShellWindow,
         func: (exp_mon: null | number, act_mon: number, act_work: number) => void,
     ) {
-        const actual_monitor = win.meta.get_monitor();
-        const actual_workspace = win.workspace_id();
+        const [actual_monitor, actual_workspace] = this.workspace_id(win);
         const monitor = this.monitors.get(win.entity);
 
         if (monitor) {
@@ -2283,6 +2282,11 @@ export class Ext extends Ecs.System<ExtEvent> {
         return this.settings.workspaces_only_on_primary() && monitor !== global.display.get_primary_monitor();
     }
 
+    /** Windows on non-primary displays share one tree when workspaces only span the primary display */
+    tiling_workspace(monitor: number, workspace: number): number {
+        return this.should_ignore_workspace(monitor) ? 0 : workspace;
+    }
+
     unset_grab_op() {
         if (this.drag_signal !== null) {
             this.overlay.visible = false;
@@ -2590,7 +2594,7 @@ export class Ext extends Ecs.System<ExtEvent> {
             let win = new Window.ShellWindow(entity, meta, window_app, this);
 
             this.windows.insert(entity, win);
-            this.monitors.insert(entity, [win.meta.get_monitor(), win.workspace_id()]);
+            this.monitors.insert(entity, this.workspace_id(win));
 
             const grab_focus = () => {
                 this.schedule_idle(() => {
@@ -2619,6 +2623,7 @@ export class Ext extends Ecs.System<ExtEvent> {
 
     /// Returns the tilable window(s) that the mouse pointer is currently hovering above.
     *windows_at_pointer(cursor: Rectangle, monitor: number, workspace: number): IterableIterator<Window.ShellWindow> {
+        workspace = this.tiling_workspace(monitor, workspace);
         for (const entity of this.monitors.find((m) => m[0] == monitor && m[1] == workspace)) {
             let window = this.windows.with(entity, (window) => {
                 return window.is_tilable(this) && window.rect().contains(cursor) ? window : null;
@@ -2649,7 +2654,7 @@ export class Ext extends Ecs.System<ExtEvent> {
             : [this.active_monitor(), this.active_workspace()];
 
         id[0] = Math.max(0, id[0]);
-        id[1] = Math.max(0, id[1]);
+        id[1] = this.tiling_workspace(id[0], Math.max(0, id[1]));
 
         return id;
     }

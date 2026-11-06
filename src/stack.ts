@@ -373,7 +373,7 @@ export class Stack {
         const window = this.ext.windows.get(c.entity);
         if (window) {
             for (const s of c.signals) window.meta.disconnect(s);
-            if (this.workspace === this.ext.active_workspace()) window.meta.get_compositor_private()?.show();
+            if (this.permitted_to_show()) window.meta.get_compositor_private()?.show();
         }
 
         c.signals = [];
@@ -407,7 +407,7 @@ export class Stack {
         // Disconnect stack signals from each window, and unhide them.
         for (const c of this.tabs) {
             this.tab_disconnect(c);
-            if (this.workspace === this.ext.active_workspace()) {
+            if (this.permitted_to_show()) {
                 const win = this.ext.windows.get(c.entity);
                 if (win) {
                     win.meta.get_compositor_private()?.show();
